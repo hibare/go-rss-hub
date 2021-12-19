@@ -1,0 +1,15 @@
+version: "3"
+services:
+  go-rss-hub:
+    image: hibare/go-rss-hub
+    container_name: go-rss-hub
+    hostname: go-rss-hub
+    environment:
+      - LISTEN_ADDR=0.0.0.0
+    ports:
+      - "5000:5000"
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "500k"
+        max-file: "5"
