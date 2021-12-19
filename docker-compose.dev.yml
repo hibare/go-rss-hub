@@ -7,9 +7,9 @@ services:
     container_name: go-rss-hub
     hostname: go-rss-hub
     environment:
-      - LISTEN_ADDR=127.0.0.1
+      - LISTEN_ADDR=0.0.0.0
     ports:
-      - "5000:5000"
+      - "127.0.0.1:5000:5000"
     logging:
       driver: "json-file"
       options:
