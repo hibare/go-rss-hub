@@ -45,12 +45,13 @@ func dockerTags(w http.ResponseWriter, r *http.Request) {
 
 	log.Printf("Processing: user %v, repository %v, include %v, exclude %s", user, repository, include, exclude)
 
+	repo := hub.GetRepo(user, repository)
 	tags := hub.GetDockerTags(user, repository)
 
 	feed := &feeds.Feed{
 		Title:       user + "/" + repository + " | Docker Hub Images",
 		Link:        &feeds.Link{Href: "https://hub.docker.com/r/" + user + "/" + repository},
-		Description: user + "/" + repository + " | Docker Hub Images",
+		Description: repo.Description,
 		Author:      &feeds.Author{Name: user},
 		Created:     time.Now(),
 	}
@@ -62,7 +63,8 @@ func dockerTags(w http.ResponseWriter, r *http.Request) {
 		feed.Items = append(feed.Items, &feeds.Item{
 			Title:       user + "/" + repository + ":" + tag.Name,
 			Link:        &feeds.Link{Href: "https://hub.docker.com/r/" + user + "/" + repository + "/tags?name=" + tag.Name},
-			Description: fmt.Sprint("Docker image ID: ", tag.Id, ", Status: ", tag.Status, ", Last Updated: ", tag.LastUpdated.String()),
+			Description: repo.Description,
+			Content:     fmt.Sprint("Docker image ID: ", tag.Id, ", Status: ", tag.Status, ", Last Updated: ", tag.LastUpdated.String()),
 			Author:      &feeds.Author{Name: user},
 			Created:     tag.LastUpdated,
 			Id:          fmt.Sprint("tag:hub.docker.com,", tag.LastUpdated.Format("2006-01-02"), ":/r/hibare/moni/tags?name=", tag.Name),
