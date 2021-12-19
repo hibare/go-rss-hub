@@ -14,16 +14,21 @@ RUN CGO_ENABLED=0 go build -o /bin/healthcheck
 # Build main app
 FROM base AS build
 
+RUN apk --update add --no-cache ca-certificates openssl git tzdata \
+    && update-ca-certificates
+
 WORKDIR /src/
 
 COPY . /src/
 
-RUN CGO_ENABLED=0 go build -o /bin/docker_hub_rss
+RUN CGO_ENABLED=0 go build -o /bin/go-rss-hub
 
 # Generate final image
 FROM scratch
 
-COPY --from=build /bin/docker_hub_rss /bin/docker_hub_rss
+COPY --from=build /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
+
+COPY --from=build /bin/go-rss-hub /bin/go-rss-hub
 
 COPY --from=healthcheck /bin/healthcheck /bin/healthcheck
 
@@ -34,4 +39,4 @@ HEALTHCHECK \
 
 EXPOSE 5000
 
-ENTRYPOINT ["/bin/docker_hub_rss"]
+ENTRYPOINT ["/bin/go-rss-hub"]
