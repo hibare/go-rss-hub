@@ -64,7 +64,7 @@ func dockerTags(w http.ResponseWriter, r *http.Request) {
 			Title:       user + "/" + repository + ":" + tag.Name,
 			Link:        &feeds.Link{Href: "https://hub.docker.com/r/" + user + "/" + repository + "/tags?name=" + tag.Name},
 			Description: repo.Description,
-			Content:     fmt.Sprint("Docker image ID: ", tag.Id, ", Status: ", tag.Status, ", Last Updated: ", tag.LastUpdated.String()),
+			Content:     fmt.Sprint("Docker image ID: ", tag.Id, ", Status: ", tag.Status),
 			Author:      &feeds.Author{Name: user},
 			Created:     tag.LastUpdated,
 			Id:          fmt.Sprint("tag:hub.docker.com,", tag.LastUpdated.Format("2006-01-02"), ":/r/hibare/moni/tags?name=", tag.Name),
